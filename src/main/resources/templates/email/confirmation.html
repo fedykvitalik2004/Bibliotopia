@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" th:lang="${language}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="#{email.confirmation.subject}"></title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .email-confirmation {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-confirmation__header {
+            background-color: #6C7A89;
+            display: block;
+            color: #fff;
+            margin: auto;
+            text-align: center;
+        }
+
+        .email-confirmation__content {
+            padding: 20px;
+        }
+
+        .email-confirmation__links {
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        .email-confirmation__link-button {
+            background-color: #A3C6C4;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: .3s;
+            text-decoration: none;
+        }
+
+        .email-confirmation__link-button:hover {
+            background-color: #A3C6C4;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-confirmation">
+        <div class="email-confirmation__header">
+            <h2 th:text="#{html.confirmation.header}"></h2>
+        </div>
+        <div class="email-confirmation__content">
+            <p th:text="#{html.confirmation.body.greeting} + ' ' + ${firstName} + ','"></p>
+            <p th:text="#{html.confirmation.body.thanks}"></p>
+            <p th:text="#{html.confirmation.body.instruction}"></p>
+            <div class="email-confirmation__links">
+                <a th:href="${emailVerificationUrl}" th:text="#{html.confirmation.body.link}"
+                   class="email-confirmation__link-button"></a>
+            </div>
+            <p th:text="#{html.confirmation.body.alternative}"></p>
+            <p th:text="#{html.confirmation.body.ignore}"></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +24,8 @@ import org.vitalii.fedyk.bibliotopia.repository.UserRepository;
 import org.vitalii.fedyk.bibliotopia.entity.Token;
 import org.vitalii.fedyk.bibliotopia.repository.TokenRepository;
 import org.vitalii.fedyk.bibliotopia.service.AuthenticationService;
+import org.vitalii.fedyk.bibliotopia.service.EmailService;
+import org.vitalii.fedyk.bibliotopia.service.EmailVerificationService;
 import org.vitalii.fedyk.bibliotopia.service.JwtService;
 
 import java.io.IOException;
@@ -39,10 +42,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final TokenRepository tokenRepository;
     private final AuthenticationManager authenticationManager;
     private final RegisterRequestMapper registerRequestMapper;
+    private final EmailService emailService;
+    private final EmailVerificationService emailVerificationService;
 
-    //todo add email
     @Override
-    public AuthenticationResponse register(final RegisterRequest registerRequest) {
+    public AuthenticationResponse register(final RegisterRequest registerRequest, final String language) {
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
             throw new UserAlreadyRegisteredException(ExceptionMessages.USER_ALREADY_REGISTERED
                     .formatted(registerRequest.getEmail()));
@@ -59,6 +63,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         saveToken(accessToken, refreshToken, user);
 
+        final String emailVerificationToken = emailVerificationService.createEmailVerification(user.getId());
+        emailService.sendConfirmationEmail(user.getFullName().getFirstName(), user.getEmail(), emailVerificationToken);
         return AuthenticationResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
@@ -131,7 +137,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private void adjustResponse(final HttpServletResponse response, final AuthenticationResponse authenticationResponse) throws IOException {
         final ObjectMapper mapper = new ObjectMapper();
         final String json = mapper.writeValueAsString(authenticationResponse);
-        response.setContentType("application/json");
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(json);
     }
 }

@@ -6,7 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.vitalii.fedyk.bibliotopia.exception.UserAlreadyRegisteredException;
+import org.vitalii.fedyk.bibliotopia.exception.EmailVerificationTokenExpiredException;
 
 import java.util.*;
 
@@ -14,7 +14,7 @@ import java.util.*;
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ConstraintViolationDto handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
+    public ConstraintViolationResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
         final List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
         final Map<String, List<String>> groupOfMessages = new HashMap<>();
         for (FieldError fieldError : fieldErrors) {
@@ -26,11 +26,12 @@ public class GlobalExceptionHandler {
                         return list;
                     });
         }
-        return new ConstraintViolationDto(groupOfMessages);
+        return new ConstraintViolationResponse(groupOfMessages);
     }
 
-    //todo
-//    @ExceptionHandler({UserAlreadyRegisteredException.class})
-//    @ResponseStatus(HttpStatus.CONFLICT)
-//    public
+    @ExceptionHandler({EmailVerificationTokenExpiredException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionResponse handleEmailVerificationTokenExpiredException(final EmailVerificationTokenExpiredException exception) {
+        return new ExceptionResponse(exception.getMessage());
+    }
 }

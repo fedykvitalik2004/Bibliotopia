@@ -8,7 +8,7 @@ import org.vitalii.fedyk.bibliotopia.dto.RegisterRequest;
 import java.io.IOException;
 
 public interface AuthenticationService {
-    AuthenticationResponse register(RegisterRequest registerRequest);
+    AuthenticationResponse register(RegisterRequest registerRequest, String language);
     AuthenticationResponse login(String email, String password);
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
 }

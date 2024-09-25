@@ -51,6 +51,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return /*status == AccountStatus.ACTIVE;*/ true;
+        return /*status == AccountStatus.ACTIVE;*/ true; //todo: change
     }
 }

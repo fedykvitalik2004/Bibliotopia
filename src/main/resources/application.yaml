@@ -14,10 +14,24 @@ spring:
       hibernate:
         format_sql: true
         highlight_sql: true
+  mail:
+    host: ${SMTP_HOST}
+    port: ${SMTP_PORT}
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 variables:
   security:
     jwt:
-      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-      access-token-expiration: 3600000 # 1 hour
-      refresh-token-expiration: 604800000 # 7 days
+      secret-key: ${JWT_SECRET_KEY}
+      access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION} #In ms
+      refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION} #In ms
+    email-verification-expiration: ${EMAIL_VERIFICATION_EXPIRATION} #In hours
+  url:
+    email-verification: ${EMAIL_VERIFICATION_URL}
