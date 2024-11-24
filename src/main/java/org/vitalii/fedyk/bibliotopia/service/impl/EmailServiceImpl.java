@@ -41,6 +41,7 @@ public class EmailServiceImpl implements EmailService {
         this.localeHolder = localeHolder;
         this.senderEmailAddress = senderEmailAddress;
         this.emailVerificationUrl = emailVerificationUrl;
+        //fixme: fix a problem with localeHolder
     }
 
     @Override

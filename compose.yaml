@@ -3,7 +3,7 @@ services:
     image: 'postgres:12'
     container_name: 'postgres_server'
     ports:
-      - '5433:5432'
+      - '5430:5432'
     env_file:
       - "postgres.env"
     networks:

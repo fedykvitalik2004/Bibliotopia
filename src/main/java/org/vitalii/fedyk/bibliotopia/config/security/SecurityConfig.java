@@ -24,7 +24,7 @@ import org.vitalii.fedyk.bibliotopia.filter.JwtAuthenticationFilter;
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
-public class SecurityConfig{
+public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final LogoutHandler logoutHandler;
@@ -32,6 +32,10 @@ public class SecurityConfig{
             "/register",
             "/login",
             "/refresh-token"
+    };
+    private static final String[] AUTHENTICATED = {
+            "/api/groups",
+            "/api/groups/{id}"
     };
 
     @Bean
@@ -46,8 +50,11 @@ public class SecurityConfig{
 
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.csrf(AbstractHttpConfigurer::disable)
+        return httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
+                        .requestMatchers(AUTHENTICATED).authenticated()
                         .requestMatchers(PERMITTED).permitAll()
                 )
                 .userDetailsService(userDetailsService)
